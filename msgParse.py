@@ -1,14 +1,19 @@
-import hypno
+import dice
 import dbHandler
 
+def prettyPrint(commands):
+  s = ''
+  for command in commands:
+    s = f'{s}\n{command}:: {commands[command]["total"]}'
+  return s
 
 def msgToCaller(msg):
   """This will be used to add a command"""
   listOfValidUsers = dbHandler.getUsers()
   dictValidCommands = {}
-  dictValidCommands['$addCommand'] = hypno.addCommand
-  dictValidCommands['$getCommand'] = hypno.currentHypnoAsString
-  dictValidCommands['$rollCommand'] = hypno.callRollHypno
+  dictValidCommands['$addCommand'] = callAddCommand
+  dictValidCommands['$getCommand'] = callGetCommand
+  dictValidCommands['$rollCommand'] = callRollCommand
   dictValidCommands['$addUser'] = dbHandler.addUser
 
   try:
@@ -30,3 +35,33 @@ def msgToCaller(msg):
   except:
     return 'ERROR'
 
+ #$addCommand haven Love-Daddy adv 20
+def callAddCommand(parseInputs:list):
+  """This will be used to add a command"""
+  errMsg = "ERROR: Should be of type User Command AdvantageType ['adv','dis','nat'] Total"
+  try:
+    user = parseInputs[1]
+    command = parseInputs[2]
+    advantageType = parseInputs[3]
+    total = int(parseInputs[4])
+    if advantageType in ['adv','dis','nat'] and total >= 0:
+      dbHandler.addCommandToDB(user,command.lower(),{"advantageType":advantageType.lower(),"total":total})
+      return f'Added Command {command}'
+    return errMsg
+  except:
+    return errMsg
+
+
+#getCommand haven
+def callGetCommand(parseInputs:list):
+  userData = dbHandler.getUserInfo(parseInputs[1])
+  return prettyPrint(userData)
+
+#rollCommand haven 90
+def callRollCommand(parseInputs:list):
+  userName = parseInputs[1]
+  userData = dbHandler.getUserInfo(userName)
+  randomAddsUpTo = dice.nSidedDie(parseInputs[2])
+  modifyTotals = dice.modifyCommandTotals(userData,randomAddsUpTo)
+  dbHandler.updateUserInfo(userName,modifyTotals)
+  return f'Rolled {randomAddsUpTo} out of {parseInputs[2]}\n{prettyPrint(modifyTotals)}'

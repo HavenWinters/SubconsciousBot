@@ -43,3 +43,8 @@ def updateUserInfo(user:str,userInfo:dict):
   del db[lowcaseUser]
   db[lowcaseUser] = userInfo
   return f'SUCCESS: User {lowcaseUser} information updated'
+
+def addCommandToDB(user:str,command:str,commandProperties:dict):
+  userData = getUserInfo(user)
+  userData[command.lower()] = commandProperties
+  updateUserInfo(user,userData)

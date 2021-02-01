@@ -7,37 +7,28 @@ def addCommandToDB(user:str,command:str,commandProperties:dict):
   dbHandler.updateUserInfo(user,userData)
 
  #$addCommand haven Love-Daddy adv 20
-def buildAddCommand(user:str,command:str,advantageType:str,total:int):
-  return f'{user} {command} {advantageType} {total}'
- #$addCommand haven Love-Daddy adv 20
-def addCommand(txt:str):
+def addCommand(parseInputs:list):
   """This will be used to add a command"""
   try:
-    splitTxt = txt.split(" ")
-    user = splitTxt[0]
-    command = splitTxt[1]
-    advantageType = splitTxt[2]
-    total = int(splitTxt[3])
-    txt == buildAddCommand(user,command,advantageType,total)
-    try:
-      addCommandToDB(user.lower(),command.lower(),{"advantageType":advantageType.lower(),"total":total})
-      return 'success'
-    except:
-      return 'failure'
+    user = parseInputs[1]
+    command = parseInputs[2]
+    advantageType = parseInputs[3]
+    total = int(parseInputs[4])
+    addCommandToDB(user,command.lower(),{"advantageType":advantageType.lower(),"total":total})
+    return f'Added Command {command}'
   except:
     return "Invalid. Should be of type User Command AdvantageType Total"
 
-def currentHypnoAsString(user):
-  userData = dbHandler.getUserInfo(user)
+def currentHypnoAsString(parseInputs:list):
+  userData = dbHandler.getUserInfo(parseInputs[1])
   s = ''
   for command in userData:
     s = f'{s}\n{command}: {userData[command]["total"]}'
   return s
 
-def callRollHypno(txt:str):
-  splitting = txt.lower().split(" ")
+def callRollHypno(parseInputs:list):
   try:
-    return rollHypno(splitting[0],int(splitting[1]))
+    return rollHypno(parseInputs[1],int(parseInputs[2]))
   except:
     return 'Must be of type haven 90'
 

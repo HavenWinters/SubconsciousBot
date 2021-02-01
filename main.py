@@ -21,26 +21,33 @@ async def on_message(message):
     return
 
   listOfUsers = dbHandler.getUsers()
-  listOfCommands = ['$addCommand','$getCommand','$rollCommand']
-  parseContents = msgParse.msgContains(message.content,listOfCommands,listOfUsers)
+  listOfCommands = ['$addCommand','$getCommand','$rollCommand','$addUser']
+  parseContents = msgParse.msgContains(message.content,listOfCommands,listOfUsers, message.guild.id)
 
   if not isinstance(parseContents, list):
     print(parseContents)
     return
 
   #$addCommand haven Love-Daddy adv 20
-  if message.content.startswith('$addCommand'):
-    reply = hypno.addCommand(message.content.split(" ", 1)[1])
+  if parseContents[0] == '$addCommand':
+    reply = hypno.addCommand(parseContents)
     await message.channel.send(reply)
     return
   #$getCommand haven
-  if message.content.startswith('$getCommand'):
-    reply = hypno.currentHypnoAsString(message.content.split(" ", 1)[1])
+  if parseContents[0] == '$getCommand':
+    reply = hypno.currentHypnoAsString(parseContents)
     await message.channel.send(reply)
     return
   #$rollCommand haven 90
-  if message.content.startswith('$rollCommand'):
-    reply = hypno.callRollHypno(message.content.split(" ", 1)[1])
+  if parseContents[0] == '$rollCommand':
+    reply = hypno.callRollHypno(parseContents)
+    await message.channel.send(reply)
+    return
+  if parseContents[0] == '$addUser':
+    try:
+      reply = dbHandler.addUser(parseContents[1])
+    except:
+      reply = 'User Added'
     await message.channel.send(reply)
     return
 

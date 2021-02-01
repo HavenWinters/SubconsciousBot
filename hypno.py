@@ -1,7 +1,6 @@
 from replit import db
 import dice
 
-
 def addCommandToDB(user:str,command:str,commandProperties:dict):
   userData = getUser(user.lower())
   userData[command.lower()] = commandProperties

@@ -14,7 +14,7 @@ def msgToCaller(msg):
   dictValidCommands['$addCommand'] = callAddCommand
   dictValidCommands['$getCommand'] = callGetCommand
   dictValidCommands['$rollCommand'] = callRollCommand
-  dictValidCommands['$addUser'] = dbHandler.addUser
+  dictValidCommands['$addUser'] = callAddUser
 
   try:
     ## split the text up into parts
@@ -66,3 +66,7 @@ def callRollCommand(parseInputs:list):
   modifyTotals = dice.modifyCommandTotals(userData,randomAddsUpTo)
   dbHandler.updateUserInfo(userName,modifyTotals)
   return f'Rolled {randomAddsUpTo} out of {addsUpTo}\n{prettyPrint(modifyTotals)}'
+
+#addUser testingName
+def callAddUser(parseInputs:list):
+  return dbHandler.addUser(parseInputs[1])

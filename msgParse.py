@@ -22,7 +22,7 @@ def msgToCaller(msg):
     callingCommand = listItems[0]
     userName = f'{msg.guild.id} {listItems[1].lower()}'
     if userName not in listOfValidUsers and callingCommand != '$addUser':
-      return f'Invalid User - Please add user {listItems[1]}'
+      return f'ERROR: Invalid User - Please add user {listItems[1]}'
     listItems[1] = userName
 
     if callingCommand in dictValidCommands:
@@ -31,9 +31,9 @@ def msgToCaller(msg):
       except:
         return 'ERROR: Dict Valid Commands failed'
     else:
-      return f'Invalid Command {callingCommand}'
+      return f'ERROR: Invalid Command {callingCommand}'
   except:
-    return 'ERROR'
+    return 'ERROR: Unknown Error'
 
  #$addCommand haven Love-Daddy adv 20
 def callAddCommand(parseInputs:list):

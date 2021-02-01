@@ -36,7 +36,7 @@ def modifyCommandTotals(userData, addsUpTo:int):
     cumulativeTotal = cumulativeTotal + roll
     rolls[command] = cumulativeTotal
   if cumulativeTotal <= 0:
-    print('Problem with cumulative total')
+    print('ERROR: Problem with cumulative total')
     return userData
   ### In order to get the multiplier to be correct it has to be a float however
   ### that will cause problems down the line. 

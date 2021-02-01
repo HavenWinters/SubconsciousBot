@@ -19,8 +19,9 @@ async def on_message(message):
     txt = msgParse.msgToCaller(message)
     if isinstance(txt,str):
       await message.channel.send(txt)
-      return
-    return
+      if not txt.startswith('ERROR'):
+        await message.delete()
+
 
 
 client.run(os.getenv('TOKEN'))

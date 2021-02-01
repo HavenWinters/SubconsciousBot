@@ -1,12 +1,3 @@
-from replit import db
-
-def getListOfUsers():
-  l = []
-  for u in db.keys():
-    l.append(u)
-  return l
-
-
 def msgContains(txt:str,listOfValidCommands:list, listOfValidUsers:list):
   """This will be used to add a command"""
   try:

@@ -2,6 +2,7 @@ import os
 import hypno
 import msgParse
 import discord
+import dbHandler
 
 client = discord.Client(intents=discord.Intents.all())
 
@@ -19,7 +20,7 @@ async def on_message(message):
   if not message.content.startswith('$'):
     return
 
-  listOfUsers = msgParse.getListOfUsers()
+  listOfUsers = dbHandler.getUsers()
   listOfCommands = ['$addCommand','$getCommand','$rollCommand']
   parseContents = msgParse.msgContains(message.content,listOfCommands,listOfUsers)
 

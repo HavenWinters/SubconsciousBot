@@ -1,3 +1,9 @@
+### Create a web server and keep pinging it every 30 mins or so
+### This keeps the robot alive
+from keep_alive import keep_alive
+keep_alive()
+
+### The code for the actual Bot
 import os
 import msgParse
 import discord

@@ -1,8 +1,12 @@
 import random
-
 def nSidedDie(n:int):
-    """This will be used to roll an nSidedDie"""
+  """This will be used to roll an nSidedDie"""
+  if n > 0:
     return random.randrange(1, n+1)
+  elif n == 0:
+    return 0
+  else:
+    return -random.randrange(1, abs(n)+1)
 
 def advNSidedDie(n:int):
   """Creates 2 dice with n sides and returns the highest"""

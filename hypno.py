@@ -44,7 +44,8 @@ def callRollHypno(txt:str):
 def rollHypno(user:str, addsUpTo:int):
   '''Increases The users command totals by a rolled amount that cumulativly adds up to the input addsUpTo.'''
   userData = dbHandler.getUserInfo(user)
-  s = ''
+  randomAddsUpTo = dice.nSidedDie(addsUpTo)
+  s = f'Rolls {randomAddsUpTo}\n'
   cumulativeTotal = 0
   rolls = {}
   ### In Order to scale everything appropriately everything is converted to cumulative.
@@ -54,10 +55,12 @@ def rollHypno(user:str, addsUpTo:int):
     #s = f'{s}\n{command} rolled {roll} at {advType}'
     cumulativeTotal = cumulativeTotal + roll
     rolls[command] = cumulativeTotal
+  if cumulativeTotal <= 0:
+    return('Problem with cumulative total')
   ### In order to get the multiplier to be correct it has to be a float however
   ### that will cause problems down the line. 
   ### This is where the cumulative comes intopractice.
-  overallScalingFactor = addsUpTo / cumulativeTotal
+  overallScalingFactor = randomAddsUpTo / cumulativeTotal
   prevRoll = 0
   for command in rolls:
     ### Every roll is scaled by the overall scaling factor and then rounded to integer

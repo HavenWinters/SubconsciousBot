@@ -1,14 +1,32 @@
-def msgContains(txt:str,listOfValidCommands:list, listOfValidUsers:list, serverID: int):
+import hypno
+import dbHandler
+
+
+def msgToCaller(msg):
   """This will be used to add a command"""
+  listOfValidUsers = dbHandler.getUsers()
+  dictValidCommands = {}
+  dictValidCommands['$addCommand'] = hypno.addCommand
+  dictValidCommands['$getCommand'] = hypno.currentHypnoAsString
+  dictValidCommands['$rollCommand'] = hypno.callRollHypno
+  dictValidCommands['$addUser'] = dbHandler.addUser
+
   try:
-    listItems = txt.split(" ")
-    if listItems[0] not in listOfValidCommands:
-      # To do. Write a list of valid commands as a help file
-      return f'Invalid Command {listItems[0]}'
-    listItems[1] = f'{serverID} {listItems[1].lower()}'
-    if listItems[1] not in listOfValidUsers and listItems[0] != '$addUser':
-      return f'Invalid User - Please add user {listItems[1].split(" ")[1]}'
-    return listItems
+    ## split the text up into parts
+    listItems = msg.content.split(" ")
+    callingCommand = listItems[0]
+    userName = f'{msg.guild.id} {listItems[1].lower()}'
+    if userName not in listOfValidUsers and callingCommand != '$addUser':
+      return f'Invalid User - Please add user {listItems[1]}'
+    listItems[1] = userName
+
+    if callingCommand in dictValidCommands:
+      try:
+        return dictValidCommands[callingCommand](listItems)
+      except:
+        return 'ERROR: Dict Valid Commands failed'
+    else:
+      return f'Invalid Command {callingCommand}'
   except:
-    return "User not valid"
- 
+    return 'ERROR'
+

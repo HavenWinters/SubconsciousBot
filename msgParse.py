@@ -60,8 +60,9 @@ def callGetCommand(parseInputs:list):
 #rollCommand haven 90
 def callRollCommand(parseInputs:list):
   userName = parseInputs[1]
+  addsUpTo = int(parseInputs[2])
   userData = dbHandler.getUserInfo(userName)
-  randomAddsUpTo = dice.nSidedDie(parseInputs[2])
+  randomAddsUpTo = dice.nSidedDie(addsUpTo)
   modifyTotals = dice.modifyCommandTotals(userData,randomAddsUpTo)
   dbHandler.updateUserInfo(userName,modifyTotals)
-  return f'Rolled {randomAddsUpTo} out of {parseInputs[2]}\n{prettyPrint(modifyTotals)}'
+  return f'Rolled {randomAddsUpTo} out of {addsUpTo}\n{prettyPrint(modifyTotals)}'

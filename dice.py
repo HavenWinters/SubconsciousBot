@@ -54,7 +54,7 @@ def modifyCommandTotals(userData, addsUpTo:int):
     ### assume you rolled 10,5 then the scaling factor was 4/3
     ### you would have 10,15 as your cumulative results
     ### you would then have 13,20 as your cumulative scaled results
-    ### finding the differences with the previous values gives you 13,6
+    ### finding the differences with the previous values gives you 13,7
     ### 
     ### The rest of the line makes sure that the total is greater than or equal to 0
     ### And makes sure that the new scaled result gets added to the previous total

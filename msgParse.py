@@ -18,9 +18,11 @@ def msgToCaller(msg):
     listItems = msg.content.split(" ")
     callingCommand = listItems[0]
     userName = f'{msg.guild.id} {listItems[1].lower()}'
-    if userName not in listOfValidUsers and callingCommand not in ['$addUser','$rollXNSidedDice']:
+    if userName in listOfValidUsers or callingCommand == '$addUser':
+      listItems[1] = userName
+    elif callingCommand != '$rollXNSidedDice':
       return f'ERROR: Invalid User - Please add user {listItems[1]}'
-    listItems[1] = userName
+    
 
     if callingCommand in dictValidCommands:
       try:
@@ -69,7 +71,7 @@ def callAddUser(parseInputs:list):
   return dbHandler.addUser(parseInputs[1])
 
 def callRollXNSidedDice(parseInputs:list):
-  rolledDice = dice.rollXNSidedDice(parseInputs[1],parseInputs[2])
+  rolledDice = dice.rollXNSidedDice(int(parseInputs[1]),int(parseInputs[2]))
   try:
     return prettify.prettyPrintListOfDice(rolledDice)
   except:

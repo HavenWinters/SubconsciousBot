@@ -1,11 +1,7 @@
 import dice
 import dbHandler
+import prettify
 
-def prettyPrint(commands):
-  s = ''
-  for command in commands:
-    s = f'{s}\n{command}:: {commands[command]["total"]}'
-  return s
 
 def msgToCaller(msg):
   """This will be used to add a command"""
@@ -15,13 +11,14 @@ def msgToCaller(msg):
   dictValidCommands['$getCommand'] = callGetCommand
   dictValidCommands['$rollCommand'] = callRollCommand
   dictValidCommands['$addUser'] = callAddUser
+  dictValidCommands['$rollXNSidedDice'] = callRollXNSidedDice
 
   try:
     ## split the text up into parts
     listItems = msg.content.split(" ")
     callingCommand = listItems[0]
     userName = f'{msg.guild.id} {listItems[1].lower()}'
-    if userName not in listOfValidUsers and callingCommand != '$addUser':
+    if userName not in listOfValidUsers and callingCommand not in ['$addUser','$rollXNSidedDice']:
       return f'ERROR: Invalid User - Please add user {listItems[1]}'
     listItems[1] = userName
 
@@ -55,7 +52,7 @@ def callAddCommand(parseInputs:list):
 #getCommand haven
 def callGetCommand(parseInputs:list):
   userData = dbHandler.getUserInfo(parseInputs[1])
-  return prettyPrint(userData)
+  return prettify.prettyPrintCommands(userData)
 
 #rollCommand haven 90
 def callRollCommand(parseInputs:list):
@@ -65,8 +62,15 @@ def callRollCommand(parseInputs:list):
   randomAddsUpTo = dice.nSidedDie(addsUpTo)
   modifyTotals = dice.modifyCommandTotals(userData,randomAddsUpTo)
   dbHandler.updateUserInfo(userName,modifyTotals)
-  return f'Rolled {randomAddsUpTo} out of {addsUpTo}\n{prettyPrint(modifyTotals)}'
+  return f'Rolled {randomAddsUpTo} out of {addsUpTo}\n{prettify.prettyPrintCommands(modifyTotals)}'
 
 #addUser testingName
 def callAddUser(parseInputs:list):
   return dbHandler.addUser(parseInputs[1])
+
+def callRollXNSidedDice(parseInputs:list):
+  rolledDice = dice.rollXNSidedDice(parseInputs[1],parseInputs[2])
+  try:
+    return prettify.prettyPrintListOfDice(rolledDice)
+  except:
+    return str(rolledDice)

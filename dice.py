@@ -63,3 +63,16 @@ def modifyCommandTotals(userData, addsUpTo:int):
     ### Essentially turns this into a lag function where it is looking at the previous roll
     prevRoll = scalingRoll
   return userData
+
+
+def rollXNSidedDice(x:int, n:int):
+ """This will be used to roll X nSidedDice"""
+ if x > 0:
+   results = []
+   count = 0
+   while count < x:
+     results.append(nSidedDie(n))
+     count += 1
+   return results
+ else:
+   return "Error: X need to be greater than 0"

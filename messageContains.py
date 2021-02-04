@@ -13,7 +13,7 @@ def search(text:str,phrase:str,wordsOnSide:int=2):
     phraseSpaceReplace = textSpaceReplace(phrase,'[- ]?')
     return re.findall(r"(?:[a-z']+\s){}{}(?:\s[a-z']+){}".format(between0AndNWords,phraseSpaceReplace,between0AndNWords), text, re.IGNORECASE)
 
-def markSpokenPhrase(msg:str,,phrase:str,diceN:int=20):
+def markSpokenPhrase(msg:str,phrase:str,diceN:int=20):
     s = ''
     for quote in findQuotedText(msg):
         for ref in search(quote,phrase,4):

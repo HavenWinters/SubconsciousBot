@@ -11,6 +11,7 @@ import discord
 from discord.ext import commands
 import d20  # pip install -U d20
 import msgParse
+import messageContains
 
 bot = commands.Bot(command_prefix='!')
 
@@ -80,6 +81,7 @@ async def parseMessage(message):
   ### Don't let the bot run on the messages that it posts
   if message.author.id == bot.user.id:
     return
+  
   if message.content.startswith('$'):
     txt = msgParse.msgToCaller(message)
     if isinstance(txt,str):
@@ -87,6 +89,10 @@ async def parseMessage(message):
       if not txt.startswith('ERROR'):
         await message.delete()
 
+  hypSlut = messageContains.markSpokenPhrase(message.content,'hypno slut',100)
+  downGirl = messageContains.markSpokenPhrase(message.content,'down girl',100)
+  if hypSlut != '' or downGirl != '':
+     await message.channel.send(f'{hypSlut}\n\n{downGirl}')
 
 
 

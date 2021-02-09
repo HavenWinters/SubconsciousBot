@@ -39,10 +39,22 @@ async def _add(ctx, a: int, b: int):
 
 @bot.command()
 async def delta(ctx, *, char: charClass.CharInfo):
+  '''
+  !delta Haven
+  Brings back the dictionary of information in the character class.
+  Used for debugging the class rather than anything in particular.
+  '''
   await ctx.send(str(char.__dict__))
 
 @bot.command()
 async def addChar(ctx, *, char: charClass.CharInfo):
+  '''
+  !addChar Haven
+  Adds a character called Haven to the database.
+  Provided of course that it does not already exist.
+  Characters in the database are discord channel dependant.
+  So you can have a Haven character in multiple RPs.
+  '''
   if char.db.inDB:
     await ctx.send(f'{char.name} already exists on channel.')
   else:
@@ -79,9 +91,13 @@ async def _roll(ctx, arg: str):
 #https://discordpy.readthedocs.io/en/latest/faq.html#why-does-on-message-make-my-commands-stop-working
 @bot.listen('on_message')
 async def parseMessage(message):
-  # do stuff here
-  # do not process commands here
-  #print('made it to bot.listen')
+  '''
+  Every discord message gets routed through here.
+  It does not run on messages that the bot writes due to some extra code.
+  It is used for parsing for phrases inside of the text.
+  Currently looking for specific phrases within speech marks.
+  Doesn't process ! commands
+  '''
 
   ### Don't let the bot run on the messages that it posts
   if message.author.id == bot.user.id:

@@ -39,27 +39,27 @@ async def _add(ctx, a: int, b: int):
 
 @bot.command()
 async def delta(ctx, *, char: charClass.CharInfo):
-  '''
-  !delta Haven
-  Brings back the dictionary of information in the character class.
-  Used for debugging the class rather than anything in particular.
-  '''
-  await ctx.send(str(char.__dict__))
+	'''
+	!delta Haven
+	Brings back the dictionary of information in the character class.
+	Used for debugging the class rather than anything in particular.
+	'''
+	await ctx.send(str(char.__dict__))
 
 @bot.command()
 async def addChar(ctx, *, char: charClass.CharInfo):
-  '''
-  !addChar Haven
-  Adds a character called Haven to the database.
-  Provided of course that it does not already exist.
-  Characters in the database are discord channel dependant.
-  So you can have a Haven character in multiple RPs.
-  '''
-  if char.db.inDB:
-    await ctx.send(f'{char.name} already exists on channel.')
-  else:
-    char.db.equals({})
-    await ctx.send(f'Hi {char.name}. User Added.')
+	'''
+	!addChar Haven
+	Adds a character called Haven to the database.
+	Provided of course that it does not already exist.
+	Characters in the database are discord channel dependant.
+	So you can have a Haven character in multiple RPs.
+	'''
+	if char.db.inDB:
+		await ctx.send(f'{char.name} already exists on channel.')
+	else:
+		char.db.equals({})
+		await ctx.send(f'Hi {char.name}. User Added.')
 
 
 
@@ -68,16 +68,16 @@ async def addChar(ctx, *, char: charClass.CharInfo):
 @bot.command(pass_context=True, name='roll')
 async def _roll(ctx, arg: str):
 	'''
-  !roll 4d6kh3  # highest 3 of 4 6-sided dice
-  !roll 2d6ro<3  # roll 2d6s, then reroll any 1s or 2s once
-  !roll 8d6mi2  # roll 8d6s, with each die having a minimum roll of 2
-  !roll "(1d4 + 1, 3, 2d6kl1)kh1"  # the highest of 1d4+1, 3, and the lower of 2 d6s
-  Uses code from https://github.com/avrae/d20
-  '''
+	!roll 4d6kh3  # highest 3 of 4 6-sided dice
+	!roll 2d6ro<3  # roll 2d6s, then reroll any 1s or 2s once
+	!roll 8d6mi2  # roll 8d6s, with each die having a minimum roll of 2
+	!roll "(1d4 + 1, 3, 2d6kl1)kh1"  # the highest of 1d4+1, 3, and the lower of 2 d6s
+	Uses code from https://github.com/avrae/d20
+	'''
 	embedVar = discord.Embed(color=random.randint(0, 0xffffff))
 	embedVar.title = "dice Roll"
 	embedVar.set_author(name=ctx.author.display_name,
-	                    icon_url=ctx.author.avatar_url)
+											icon_url=ctx.author.avatar_url)
 	embedVar.description = "Rolling a dice description"
 	embedVar.add_field(name="Field1", value="hi", inline=False)
 	embedVar.add_field(name="Field2", value=d20.roll(arg), inline=False)
@@ -91,22 +91,22 @@ async def _roll(ctx, arg: str):
 #https://discordpy.readthedocs.io/en/latest/faq.html#why-does-on-message-make-my-commands-stop-working
 @bot.listen('on_message')
 async def parseMessage(message):
-  '''
-  Every discord message gets routed through here.
-  It does not run on messages that the bot writes due to some extra code.
-  It is used for parsing for phrases inside of the text.
-  Currently looking for specific phrases within speech marks.
-  Doesn't process ! commands
-  '''
+	'''
+	Every discord message gets routed through here.
+	It does not run on messages that the bot writes due to some extra code.
+	It is used for parsing for phrases inside of the text.
+	Currently looking for specific phrases within speech marks.
+	Doesn't process ! commands
+	'''
 
-  ### Don't let the bot run on the messages that it posts
-  if message.author.id == bot.user.id:
-    return
-  
-  hypSlut = messageContains.markSpokenPhrase(message.content,'hypno slut',100)
-  downGirl = messageContains.markSpokenPhrase(message.content,'down girl',100)
-  if hypSlut != '' or downGirl != '':
-     await message.channel.send(f'{hypSlut}\n\n{downGirl}')
+	### Don't let the bot run on the messages that it posts
+	if message.author.id == bot.user.id:
+		return
+	
+	hypSlut = messageContains.markSpokenPhrase(message.content,'hypno slut',100)
+	downGirl = messageContains.markSpokenPhrase(message.content,'down girl',100)
+	if hypSlut != '' or downGirl != '':
+		 await message.channel.send(f'{hypSlut}\n\n{downGirl}')
 
 
 

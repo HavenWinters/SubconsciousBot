@@ -61,7 +61,44 @@ async def addChar(ctx, *, char: charClass.CharInfo):
 		char.db.equals({})
 		await ctx.send(f'Hi {char.name}. User Added.')
 
+@bot.command()
+async def testEmbed(ctx, char: charClass.CharInfo, *args):
+	text = '{} arguments: {}'.format(len(args), ', '.join(args))
+	charEmbed = char.embed
+	charEmbed.description = text
+	await ctx.send(embed=charEmbed)
 
+@bot.command()
+async def setImageUrl(ctx, char: charClass.CharInfo, url:str):
+	'''
+	!setImageUrl Haven https://i.pinimg.com/originals/1e/c6/df/1ec6df3e5d970ec830c5faa320cb602d.jpg
+
+	Sets the image as the new default image for the character.
+	It also deletes the message to tidy things up a bit.
+	'''
+	if char.db.inDB:
+		print("updateDB")
+		# update DB
+		charProperties = char.db.data
+		charProperties['imageUrl'] = url
+		char.db.equals(charProperties)
+		print("updateurl")
+		# update URL for embed
+		char.imageUrl = url
+		print("get embed")
+		# get and use embed
+		charEmbed = char.embed
+		print("get embed1")
+		charEmbed.description = 'Image has been successfully updated'
+		print("get embed2")
+		charEmbed.title = None
+		print("get embed3")
+		charEmbed.set_image(url=url)
+		print("get embed4")
+		await ctx.message.delete()
+		await ctx.send(embed=charEmbed)
+	else:
+		await ctx.send(f'Hi {char.name}. User does not exist.')
 
 
 

@@ -1,31 +1,38 @@
 from replit import db
 
-class DB:
+class DBkey:
 	def __init__(self,key):
 		self.key = key
 
-	@property
-	def inDB(self):
-		try:
-			self.data
-			return True
-		except:
-			return False
+	def __repr__(self):
+		return f'DBkey({self.key})'
+
+	def __str__(self):
+		return f'db["{self.key}"]\n{"-"*len(self.key)}\n{self.data}'
 
 	@property
-	def delete(self):
-		del db[self.key]
+	def inDB(self):
+		return self.data != None
 
 	@property
 	def data(self):
-		return db[self.key]
+		try:
+			return db[self.key]
+		except:
+			return None	
 
-	def equals(self,newData):
+	@data.deleter
+	def data(self):
+		del db[self.key]
+
+	@data.setter
+	def data(self,newData):
 		if self.inDB:
-			self.delete
+			del self.data
 		# finished deleting so add the new Data
 		db[self.key] = newData
-	
+
+
 	def updateSubKey(self,subKey,newValue):
 		'''
 		For a key in the returned data update the value.
@@ -36,7 +43,7 @@ class DB:
 				getData = self.data
 				prevVal = getattr(getData,subKey,f'{subKey} having no value')
 				getData[subKey] = newValue
-				self.equals(getData)
+				self.data = getData
 				return (True, f'{subKey} updated from {str(prevVal)} to {newValue}')
 			except:
 				return (False,'Error: Unknown Error with the update.')

@@ -29,9 +29,9 @@ class CharInfo:
 	def dbKeyClass(self):
 		nameValid, lowName = self.cleansedName
 		if nameValid:
-			return dbHandler.DB(f'{str(self.channelID)} {lowName}')
+			return dbHandler.DBkey(f'{str(self.channelID)} {lowName}')
 		else:
-			return dbHandler.DB('TESTINGCHAR')
+			return dbHandler.DBkey('TESTINGCHAR')
 
 	def storedVal(self,key,defaultVal):
 		try:

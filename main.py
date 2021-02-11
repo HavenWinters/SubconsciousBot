@@ -77,18 +77,14 @@ async def setImageUrl(ctx, char: charClass.CharInfo, url:str):
 	It also deletes the message to tidy things up a bit.
 	'''
 	if char.db.inDB:
-		# update DB
-		charProperties = char.db.data
-		charProperties['imageUrl'] = url
-		char.db.equals(charProperties)
-		# update URL for embed
-		char.imageUrl = url
+		updateSuccess, updateResult = char.db.updateSubKey('imageUrl',url)
+		if updateSuccess:
+			await ctx.message.delete()
+
 		# get and use embed
 		charEmbed = char.embed
-		charEmbed.description = 'Image has been successfully updated'
-		charEmbed.title = None
-		charEmbed.set_image(url=url)
-		await ctx.message.delete()
+		charEmbed.description = updateResult
+		charEmbed.title = 'Set Image URL'
 		await ctx.send(embed=charEmbed)
 	else:
 		await ctx.send(f'Hi {char.name}. User does not exist.')

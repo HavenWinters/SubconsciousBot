@@ -12,8 +12,6 @@ class CharInfo:
 		self.channelID = ctx.channel.id
 		self.db = self.dbKeyClass
 		self.ctx = ctx
-		self.color = self.storedVal('color',random.randint(0, 0xffffff))
-		self.imageUrl = self.storedVal('imageUrl',ctx.author.avatar_url)
 
 	@classmethod
 	async def convert(cls, ctx, argument):
@@ -43,9 +41,11 @@ class CharInfo:
 
 	@property
 	def embed(self):
-		charEmbed = discord.Embed(color = self.color)
+		color = self.storedVal('color',random.randint(0, 0xffffff))
+		imageUrl = self.storedVal('imageUrl',self.ctx.author.avatar_url)
+		charEmbed = discord.Embed(color = color)
 		charEmbed.set_author(name = self.name)
-		charEmbed.set_thumbnail(url = self.imageUrl)
+		charEmbed.set_thumbnail(url = imageUrl)
         # charEmbed.title = "title"
 		#charEmbed.description = "description"
 		#charEmbed.add_field(name="Field1", value="hi", inline=False)

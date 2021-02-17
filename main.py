@@ -9,7 +9,6 @@ import os
 import random
 import discord
 from discord.ext import commands
-import d20  # pip install -U d20
 import messageContains
 import charClass
 
@@ -89,29 +88,6 @@ async def setImageUrl(ctx, char: charClass.CharInfo, url:str):
 	else:
 		await ctx.send(f'Hi {char.name}. User does not exist.')
 
-
-
-@bot.command(pass_context=True, name='roll')
-async def _roll(ctx, arg: str):
-	'''
-	!roll 4d6kh3  # highest 3 of 4 6-sided dice
-	!roll 2d6ro<3  # roll 2d6s, then reroll any 1s or 2s once
-	!roll 8d6mi2  # roll 8d6s, with each die having a minimum roll of 2
-	!roll "(1d4 + 1, 3, 2d6kl1)kh1"  # the highest of 1d4+1, 3, and the lower of 2 d6s
-	Uses code from https://github.com/avrae/d20
-	'''
-	embedVar = discord.Embed(color=random.randint(0, 0xffffff))
-	embedVar.title = "dice Roll"
-	embedVar.set_author(name=ctx.author.display_name,
-											icon_url=ctx.author.avatar_url)
-	embedVar.description = "Rolling a dice description"
-	embedVar.add_field(name="Field1", value="hi", inline=False)
-	embedVar.add_field(name="Field2", value=d20.roll(arg), inline=False)
-
-	await ctx.message.delete()
-	await ctx.send(embed=embedVar)
-
-	#await ctx.send(d20.roll(arg))
 
 
 #https://discordpy.readthedocs.io/en/latest/faq.html#why-does-on-message-make-my-commands-stop-working

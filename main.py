@@ -46,10 +46,13 @@ async def addChar(ctx, *, char: charClass.CharInfo):
 	So you can have a Haven character in multiple RPs.
 	'''
 	if char.db.inDB:
-		await ctx.send(f'{char.name} already exists on channel.')
+		charEmbed = char.embed(f'{char.name} already exists on channel.')
 	else:
-		char.db.equals({})
-		await ctx.send(f'Hi {char.name}. User Added.')
+		char.db.data = {}
+		charEmbed = char.embed(f'{char.name} Added.')
+
+	charEmbed.title = f'Adding {char.name}'
+	await ctx.send(embed=charEmbed)
 
 @bot.command()
 async def dbInfo(ctx, char: charClass.CharInfo, *args):

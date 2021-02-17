@@ -11,6 +11,7 @@ import discord
 from discord.ext import commands
 import messageContains
 import charClass
+import commands as cmds
 
 bot = commands.Bot(command_prefix='!')
 
@@ -79,6 +80,27 @@ async def setImageUrl(ctx, char: charClass.CharInfo, url:str):
 		await ctx.send(embed=charEmbed)
 	else:
 		await ctx.send(f'Hi {char.name}. User does not exist.')
+
+
+
+@bot.command()
+async def getCommands(ctx, *, char: charClass.CharInfo):
+	'''
+	!getCommands Haven
+	Checks the Haven character for any commands and prints them to discord
+	'''
+	if char.db.inDB:
+		d = char.db.data
+		commandDict = d.get('commands',{})
+		gc = cmds.GroupedCommands(commandDict)
+		s = ''
+		for c in gc.commandList:
+			s = f'{s}\n{c.name} :: {c.intensity}'
+		charEmbed = char.embed('No commands' if s == '' else s)
+		charEmbed.title = 'Commands'
+		await ctx.send(embed=charEmbed)
+	else:
+		await ctx.send(f'Character not yet added')
 
 
 

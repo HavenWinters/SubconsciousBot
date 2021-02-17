@@ -2,8 +2,11 @@
 
 class Command():
 
-	def __init__(self,name:str, advType:int=0,intensity:int=0) -> None:
-		self.name = name
+	def __init__(self,name:str, advType:int=0,intensity:int=0) -> None:	
+		if isinstance(name,str):
+			self.name = name 
+		else:
+			raise TypeError('Name needs to be a string')
 		self.advType = advType
 		self.intensity = intensity
 
@@ -41,18 +44,34 @@ class Command():
 			outDict['intensity'] = self.intensity
 		return outDict
 
-class GroupedCommands():
 
-	def __init__(self,commands:dict = None):
-		'''
-		Input a dictionary of commands to be operated on.
-		Each Command is of the form
-		name:{advType:1,intensity:0}
-		'''
-		if commands == None: #mutable dictionaries makes this pattern necessary
-			self.commands = {}
-		else:
-			self.commands = commands
+def parseCommandsDict(commandsDict:dict = None) -> list:
+	commandsList = []
+	if commandsDict == None:
+		return commandsList
+	else:
+		for name, value in commandsDict.items():
+			advType = value.get('advType',0)
+			intensity = value.get('intensity',0)
+			commandsList.append(Command(name,advType,intensity))
+	return commandsList
+
+
+
+# class GroupedCommands():
+
+# 	def __init__(self,commandsDict:dict = None):
+# 		'''
+# 		Input a dictionary of commands to be operated on.
+# 		Each Command is of the form
+# 		name:{advType:1,intensity:0}
+# 		'''
+# 		if commandsDict == None: #mutable dictionaries makes this pattern necessary
+# 			self.commandsDict = {}
+# 		else:
+# 			self.commandsDict = commandsDict
+
+# 		self.commandList = parseCommandsDict(self.commandsDict)
 
 
 
@@ -100,10 +119,19 @@ if __name__ == '__main__':
 				c.advType = -10
 
 
-	class testGroupedCommands(unittest.TestCase):
+	class testparseCommandsDict(unittest.TestCase):
 
-		def test_commandsCreation(self):
-			_ = GroupedCommands({})
+		def test_emptyDict(self):
+			self.assertIsInstance(parseCommandsDict({}),list)
+			self.assertIsInstance(parseCommandsDict(),list)
+			
+		def test_commandsConvertToList(self):
+			l = parseCommandsDict({'a':{'intensity':50}})
+			self.assertEqual(l[0].name,'a')
+			self.assertEqual(l[0].advType,0)
+			self.assertEqual(l[0].intensity,50)
+
+
 
 
 

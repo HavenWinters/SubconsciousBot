@@ -6,7 +6,7 @@ def onlyLettersFromString(s:str):
 	return ''.join(filter(str.isalpha, s))
 
 def formatDict(d, tab=0):
-    s = ['{\n']
+    s = ['\n']
     for k,v in d.items():
         if isinstance(v, dict):
             v = formatDict(v, tab+1)
@@ -14,7 +14,7 @@ def formatDict(d, tab=0):
             v = str(v)
 
         s.append('%s%r: %s,\n' % ('  '*tab, k, v))
-    s.append('%s}' % ('  '*tab))
+    s.append('%s' % ('  '*tab))
     return ''.join(s)
 
 def embedDescription(content:any) -> str:

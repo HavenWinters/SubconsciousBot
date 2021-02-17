@@ -5,6 +5,24 @@ import random
 def onlyLettersFromString(s:str):
 	return ''.join(filter(str.isalpha, s))
 
+def formatDict(d, tab=0):
+    s = ['{\n']
+    for k,v in d.items():
+        if isinstance(v, dict):
+            v = formatDict(v, tab+1)
+        else:
+            v = str(v)
+
+        s.append('%s%r: %s,\n' % ('  '*tab, k, v))
+    s.append('%s}' % ('  '*tab))
+    return ''.join(s)
+
+def embedDescription(content:any) -> str:
+	if isinstance(content, dict):
+		return formatDict(content)
+	else:
+		return str(content)
+
 
 class CharInfo:
 	def __init__(self,ctx,name):
@@ -39,13 +57,13 @@ class CharInfo:
 		except:
 			return defaultVal
 
-	@property
-	def embed(self):
+	def embed(self,description:str = ''):
 		color = self.storedVal('color',random.randint(0, 0xffffff))
 		imageUrl = self.storedVal('imageUrl',self.ctx.author.avatar_url)
 		charEmbed = discord.Embed(color = color)
 		charEmbed.set_author(name = self.name)
 		charEmbed.set_thumbnail(url = imageUrl)
+		charEmbed.description = embedDescription(description)
         # charEmbed.title = "title"
 		#charEmbed.description = "description"
 		#charEmbed.add_field(name="Field1", value="hi", inline=False)

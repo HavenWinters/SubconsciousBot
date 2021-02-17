@@ -35,16 +35,6 @@ async def _add(ctx, a: int, b: int):
 	await ctx.send(a + b)
 
 
-
-@bot.command()
-async def delta(ctx, *, char: charClass.CharInfo):
-	'''
-	!delta Haven
-	Brings back the dictionary of information in the character class.
-	Used for debugging the class rather than anything in particular.
-	'''
-	await ctx.send(str(char.__dict__))
-
 @bot.command()
 async def addChar(ctx, *, char: charClass.CharInfo):
 	'''
@@ -61,10 +51,13 @@ async def addChar(ctx, *, char: charClass.CharInfo):
 		await ctx.send(f'Hi {char.name}. User Added.')
 
 @bot.command()
-async def testEmbed(ctx, char: charClass.CharInfo, *args):
-	text = '{} arguments: {}'.format(len(args), ', '.join(args))
-	charEmbed = char.embed
-	charEmbed.description = text
+async def dbInfo(ctx, char: charClass.CharInfo, *args):
+	'''
+	!dbInfo Haven
+	Brings back the dictionary of information in the character class.
+	Used for debugging the class rather than anything in particular.
+	'''
+	charEmbed = char.embed(char.__dict__)
 	await ctx.send(embed=charEmbed)
 
 @bot.command()
@@ -81,8 +74,7 @@ async def setImageUrl(ctx, char: charClass.CharInfo, url:str):
 			await ctx.message.delete()
 
 		# get and use embed
-		charEmbed = char.embed
-		charEmbed.description = updateResult
+		charEmbed = char.embed(updateResult)
 		charEmbed.title = 'Set Image URL'
 		await ctx.send(embed=charEmbed)
 	else:

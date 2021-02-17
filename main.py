@@ -105,6 +105,26 @@ async def getCommands(ctx, *, char: charClass.CharInfo):
 	else:
 		await ctx.send('Character not yet added')
 
+@bot.command()
+async def addCommand(ctx, char: charClass.CharInfo,name:str, advType:int = 0, intensity:int = 0):
+	'''
+	!getCommands Haven
+	Checks the Haven character for any commands and prints them to discord
+	'''
+	if char.db.inDB:
+		d = char.db.data
+		commandDict = d.get('commands',{})
+		gc = cmds.GroupedCommands(commandDict)
+		gc.addCommand(cmds.Command(name,advType,intensity))
+		d['commands'] = gc.output
+		char.db.data = d
+		charEmbed = char.embed(f'Added {name}')
+		charEmbed.title = 'Adding Command'
+		await ctx.send(embed=charEmbed)
+	else:
+		await ctx.send('Character not yet added')
+
+
 
 
 #https://discordpy.readthedocs.io/en/latest/faq.html#why-does-on-message-make-my-commands-stop-working

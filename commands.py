@@ -38,8 +38,9 @@ class Command():
 		return ['dis','nat','adv'][self.advType + 1]
 
 	def roll(self,rollFor:int) -> int:
-		self.rolled = (dice.rollGivenAdvType(self.stringAdvType,rollFor),rollFor)
-		return self.rolled[1]
+		myRoll = dice.rollGivenAdvType(self.stringAdvType,rollFor)
+		self.rolled = (myRoll,rollFor)
+		return myRoll
 
 	@property
 	def output(self) -> dict:
@@ -231,6 +232,15 @@ if __name__ == '__main__':
 			cmds = increaseIntensity(cmds,100)
 			self.assertEqual(sum(command.intensity for command in cmds),150)
 
+		def test_differentResult(self):
+			cmds = [Command('Testing',-1,100),Command('Testing2',0,100),Command('Testing3',1,100)]
+			for i in range(100):
+				cmds.append(Command(str(i),0,100))
+			self.assertEqual(min(command.intensity for command in cmds),max(command.intensity for command in cmds))
+			cmds = increaseIntensity(cmds,len(cmds)*20)
+			# could potentially be the same by luck
+			self.assertNotEqual(min(command.intensity for command in cmds),max(command.intensity for command in cmds))
+
 
 	class testGroupedCommands(unittest.TestCase):
 
@@ -261,7 +271,6 @@ if __name__ == '__main__':
 			gc = GroupedCommands(input)
 			gc.increase(50)
 			self.assertEqual(sum(command.intensity for command in gc.commandList),150)
-
 
 
 

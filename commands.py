@@ -18,6 +18,17 @@ class Command():
 		else:
 			raise ValueError('Intensity has to be greater than or equal to 0')
 
+	@property
+	def advType(self) -> int:
+		return self.__advType
+	
+	@advType.setter
+	def advType(self,value:int) -> None:
+		if value in [-1,0,1]:
+			self.__advType = value
+		else:
+			raise ValueError('advType has to be either [-1,0,1]')
+
 
 	@property
 	def output(self) -> dict:
@@ -67,6 +78,14 @@ if __name__ == '__main__':
 			c = Command('TestingName',1,100)
 			with self.assertRaises(ValueError):
 				c.intensity = -100
+
+		def test_advType_valueError(self):
+			with self.assertRaises(ValueError):
+				_ = Command('TestingName',3,-1)
+
+			c = Command('TestingName',1,100)
+			with self.assertRaises(ValueError):
+				c.advType = -10
 
 
 

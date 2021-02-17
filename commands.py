@@ -46,9 +46,7 @@ class Command():
 		outDict = {}
 		if self.advType in [-1,1]:
 			outDict['advType'] = self.advType
-			# setattr(outDict,'advType',)
 		if self.intensity > 0:
-			# setattr(outDict,'intensity',self.intensity)
 			outDict['intensity'] = self.intensity
 		return outDict
 

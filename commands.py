@@ -41,6 +41,18 @@ class Command():
 			outDict['intensity'] = self.intensity
 		return outDict
 
+class GroupedCommands():
+
+	def __init__(self,commands:dict = None):
+		'''
+		Input a dictionary of commands to be operated on.
+		Each Command is of the form
+		name:{advType:1,intensity:0}
+		'''
+		if commands == None: #mutable dictionaries makes this pattern necessary
+			self.commands = {}
+		else:
+			self.commands = commands
 
 
 
@@ -86,6 +98,12 @@ if __name__ == '__main__':
 			c = Command('TestingName',1,100)
 			with self.assertRaises(ValueError):
 				c.advType = -10
+
+
+	class testGroupedCommands(unittest.TestCase):
+
+		def test_commandsCreation(self):
+			_ = GroupedCommands({})
 
 
 

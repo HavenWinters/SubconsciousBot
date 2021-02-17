@@ -103,7 +103,7 @@ async def getCommands(ctx, *, char: charClass.CharInfo):
 		charEmbed.title = 'Commands'
 		await ctx.send(embed=charEmbed)
 	else:
-		await ctx.send(f'Character not yet added')
+		await ctx.send('Character not yet added')
 
 
 

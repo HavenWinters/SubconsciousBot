@@ -143,6 +143,28 @@ async def deleteCommand(ctx, char: charClass.CharInfo,name:str):
 	else:
 		await ctx.send('Character not yet added')
 
+@bot.command()
+async def increaseCommands(ctx, char: charClass.CharInfo,total:int):
+	'''
+	!getCommands Haven
+	Checks the Haven character for any commands and prints them to discord
+	'''
+	if char.db.inDB:
+		d = char.db.data
+		commandDict = d.get('commands',{})
+		gc = cmds.GroupedCommands(commandDict)
+		gc.increase(total)
+		d['commands'] = gc.output
+		char.db.data = d
+		s = ''
+		for c in gc.commandList:
+			s = f'{s}\n{c.name} :: {c.intensity}'
+		charEmbed = char.embed('No commands' if s == '' else s)
+		charEmbed.title = f'Increase Intensity of Commands by {total}'
+		await ctx.send(embed=charEmbed)
+	else:
+		await ctx.send('Character not yet added')
+
 
 
 

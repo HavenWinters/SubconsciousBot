@@ -109,20 +109,46 @@ def increaseIntensity(commandList:list, addsUpTo:int) -> list:
 		prevRoll = scalingRoll
 	return commandList
 
-# class GroupedCommands():
+class GroupedCommands():
 
-# 	def __init__(self,commandsDict:dict = None):
-# 		'''
-# 		Input a dictionary of commands to be operated on.
-# 		Each Command is of the form
-# 		name:{advType:1,intensity:0}
-# 		'''
-# 		if commandsDict == None: #mutable dictionaries makes this pattern necessary
-# 			self.commandsDict = {}
-# 		else:
-# 			self.commandsDict = commandsDict
+	def __init__(self,commandsDict:dict = None):
+		'''
+		Input a dictionary of commands to be operated on.
+		Each Command is of the form
+		name:{advType:1,intensity:0}
+		'''
+		if commandsDict == None: #mutable dictionaries makes this pattern necessary
+			self.commandsDict = {}
+		else:
+			self.commandsDict = commandsDict
 
-# 		self.commandList = parseCommandsDict(self.commandsDict)
+		self.commandList = parseCommandsDict(self.commandsDict)
+
+	@property
+	def output(self) -> dict:
+		return {command.name: command.output for command in self.commandList}
+
+	def increase(self,amount) -> None:
+		increaseIntensity(self.commandList,amount)
+
+	def addCommand(self,newCommand:Command) -> None:
+		if newCommand.name in [command.name for command in self.commandList]:
+			raise Exception('Cannot create a new command with the same name')
+		else:
+			self.commandList.append(newCommand)
+
+	def deleteCommand(self,name:str) -> None:
+		tempDict = self.output
+		try:
+			del tempDict[name]
+		except:
+			raise Exception('Cannot delete command')
+		finally:
+			self.commandList = parseCommandsDict(tempDict)
+
+
+
+
 
 
 
@@ -204,6 +230,40 @@ if __name__ == '__main__':
 			self.assertEqual(sum(command.intensity for command in cmds),50)
 			cmds = increaseIntensity(cmds,100)
 			self.assertEqual(sum(command.intensity for command in cmds),150)
+
+
+	class testGroupedCommands(unittest.TestCase):
+
+		def test_addCommand(self):
+			gc = GroupedCommands({})
+			gc.addCommand(Command('Testing'))
+			self.assertEqual(gc.commandList[0].name,'Testing')
+			gc.addCommand(Command('Bob'))
+			self.assertEqual(gc.commandList[1].name,'Bob')
+
+		def test_delCommand(self):
+			gc = GroupedCommands({'Testing':{},'Bob':{}})
+			self.assertEqual(gc.commandList[0].name,'Testing')
+			self.assertEqual(gc.commandList[1].name,'Bob')
+			gc.deleteCommand('Testing')
+			self.assertEqual(gc.commandList[0].name,'Bob')
+			self.assertEqual(len(gc.commandList),1)
+			gc.deleteCommand('Bob')
+			self.assertEqual(len(gc.commandList),0)
+
+		def test_output(self):
+			input = {'Testing':{},'Bob':{'intensity':100}}
+			gc = GroupedCommands(input)
+			self.assertEqual(gc.output,input)
+
+		def test_increaseIntensity(self):
+			input = {'Testing':{},'Bob':{'intensity':100}}
+			gc = GroupedCommands(input)
+			gc.increase(50)
+			self.assertEqual(sum(command.intensity for command in gc.commandList),150)
+
+
+
 
 
 

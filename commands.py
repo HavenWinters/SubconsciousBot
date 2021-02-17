@@ -35,7 +35,7 @@ class Command():
 
 	@property
 	def output(self) -> dict:
-		outDict = {'name':self.name}
+		outDict = {}
 		if self.advType in [-1,1]:
 			outDict['advType'] = self.advType
 			# setattr(outDict,'advType',)
@@ -56,8 +56,11 @@ def parseCommandsDict(commandsDict:dict = None) -> list:
 			commandsList.append(Command(name,advType,intensity))
 	return commandsList
 
-
-
+def constructCommandsDict(commandsList:list = []) -> dict:
+	commandsDict = {}
+	for command in commandsList:
+		commandsDict[command.name] = command.output
+	return commandsDict
 # class GroupedCommands():
 
 # 	def __init__(self,commandsDict:dict = None):
@@ -90,7 +93,6 @@ if __name__ == '__main__':
 			c = Command('TestingName')
 			out = c.output
 			self.assertTrue(isinstance(out,dict))
-			self.assertEqual(out['name'], 'TestingName')
 			self.assertFalse('advType' in out.keys())
 			self.assertFalse('intensity' in out.keys())
 
@@ -98,7 +100,6 @@ if __name__ == '__main__':
 			c = Command('TestingName',1,100)
 			out = c.output
 			self.assertTrue(isinstance(out,dict))
-			self.assertEqual(out['name'], 'TestingName')
 			self.assertEqual(out['advType'], 1)
 			self.assertEqual(out['intensity'], 100)
 
@@ -131,6 +132,10 @@ if __name__ == '__main__':
 			self.assertEqual(l[0].advType,0)
 			self.assertEqual(l[0].intensity,50)
 
+		def test_constructParsed(self):
+			commandDict = {'a':{'intensity':50}}
+			p = parseCommandsDict(commandDict)
+			self.assertEqual(constructCommandsDict(p),commandDict)
 
 
 

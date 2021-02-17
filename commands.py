@@ -1,4 +1,4 @@
-
+import dice
 
 class Command():
 
@@ -9,6 +9,7 @@ class Command():
 			raise TypeError('Name needs to be a string')
 		self.advType = advType
 		self.intensity = intensity
+		self.rolled = (0,0) # (roll,outof) 
 
 	@property
 	def intensity(self) -> int:
@@ -32,6 +33,13 @@ class Command():
 		else:
 			raise ValueError('advType has to be either [-1,0,1]')
 
+	@property
+	def stringAdvType(self) -> str:
+		return ['dis','nat','adv'][self.advType + 1]
+
+	def roll(self,rollFor:int) -> int:
+		self.rolled = (dice.rollGivenAdvType(self.stringAdvType,rollFor),rollFor)
+		return self.rolled[1]
 
 	@property
 	def output(self) -> dict:
@@ -61,6 +69,48 @@ def constructCommandsDict(commandsList:list = []) -> dict:
 	for command in commandsList:
 		commandsDict[command.name] = command.output
 	return commandsDict
+
+
+def increaseIntensity(commandList:list, addsUpTo:int) -> list:
+	'''Increases The users command totals by a rolled amount that cumulativly adds up to the input addsUpTo.
+		Example:
+		assume you wanted the values to add up to 20
+		assume you rolled 10,5 then the scaling factor was 4/3
+		you would have 10,15 as your cumulative results
+		you would then have 13,20 as your cumulative scaled results
+		finding the differences with the previous values gives you 13,7
+	'''
+	if commandList == []:
+		return commandList
+	cumulativeTotal = 0
+	cumulativeTotalList = []
+	### In Order to scale everything appropriately everything is converted to cumulative.
+	for command in commandList:
+		cumulativeTotal = cumulativeTotal + command.roll(20)
+		cumulativeTotalList.append(cumulativeTotal)
+
+	if cumulativeTotal <= 0:
+		raise ZeroDivisionError('cumulativeTotal should never be less than or equal to 0.')
+	### In order to get the multiplier to be correct it has to be a float however
+	### that will cause problems down the line. 
+	### This is where the cumulative comes intopractice.
+	overallScalingFactor = addsUpTo / cumulativeTotal
+	prevRoll = 0
+	for cumulativeTotal,command in zip(cumulativeTotalList,commandList):
+		### Every roll is scaled by the overall scaling factor and then rounded to integer
+		scalingRoll = round(cumulativeTotal * overallScalingFactor)
+		### scaling roll - previous roll is the key to all of this.
+		### because they are both cumulative and scaled and rounded the difference between
+		### them is the actual scaled up roll that takes account of rounding
+
+		### The rest of the line makes sure that the total is greater than or equal to 0
+		### And makes sure that the new scaled result gets added to the previous total
+		command.intensity = max(0,( command.intensity + scalingRoll - prevRoll ))
+		### Setting the prevRoll to the current set of rolls after it has been used
+		### Essentially turns this into a lag function where it is looking at the previous roll
+		prevRoll = scalingRoll
+	return commandList
+
 # class GroupedCommands():
 
 # 	def __init__(self,commandsDict:dict = None):
@@ -136,6 +186,27 @@ if __name__ == '__main__':
 			commandDict = {'a':{'intensity':50}}
 			p = parseCommandsDict(commandDict)
 			self.assertEqual(constructCommandsDict(p),commandDict)
+
+
+	class testIncreaseIntensity(unittest.TestCase):
+
+		def test_emptyList(self):
+			self.assertIsInstance(increaseIntensity([],100),list)
+			self.assertEqual(increaseIntensity([],100),[])
+
+		def test_increaseOneCommandByN(self):
+			cmds = [Command('Testing',0,0)]
+			self.assertEqual(cmds[0].intensity,0)
+			cmds2 = increaseIntensity(cmds,100)
+			self.assertEqual(cmds[0].intensity,100) # mutates collection of commands
+			self.assertEqual(cmds2[0].intensity,100)
+
+		def test_increaseMultipleByN(self):
+			cmds = [Command('Testing',0,30),Command('Testing2',0,20)]
+			self.assertEqual(sum(command.intensity for command in cmds),50)
+			cmds = increaseIntensity(cmds,100)
+			self.assertEqual(sum(command.intensity for command in cmds),150)
+
 
 
 

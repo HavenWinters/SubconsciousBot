@@ -1,14 +1,11 @@
 # from replit import db
-db = {}
+
 import json
+db = json.load( open( "myfile.json" ) )
 
 def saveDB():
 	json.dump( db, open( "myfile.json", 'w' ) )
 
-def loadDB():
-	db = json.load( open( "myfile.json" ) )
-
-loadDB()
 
 class DBkey:
 	def __init__(self,key):

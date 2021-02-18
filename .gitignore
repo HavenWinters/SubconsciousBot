@@ -3,3 +3,5 @@ img/
 env.py
 myfile.json
 __pycache__/
+*.pyc
+*.pyo

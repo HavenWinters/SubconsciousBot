@@ -1,12 +1,12 @@
 ### Create a web server and keep pinging it every 30 mins or so
 ### This keeps the robot alive
-from keep_alive import keep_alive
-keep_alive()
+# from keep_alive import keep_alive
+# keep_alive()
 
 ###https://stackoverflow.com/questions/50662953/command-parsing-for-discord-py
 ### The code for the actual Bot
-import os
-import random
+# import os
+# import random
 import discord
 from discord.ext import commands
 import messageContains
@@ -226,4 +226,5 @@ async def on_command_error(ctx, error):
 		await ctx.send("Could not parse commands argument.")
 
 
-bot.run(os.getenv('TOKEN'))
+import env
+bot.run(env.getToken())

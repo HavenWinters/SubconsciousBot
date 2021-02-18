@@ -1,4 +1,14 @@
-from replit import db
+# from replit import db
+db = {}
+import json
+
+def saveDB():
+	json.dump( db, open( "myfile.json", 'w' ) )
+
+def loadDB():
+	db = json.load( open( "myfile.json" ) )
+
+loadDB()
 
 class DBkey:
 	def __init__(self,key):
@@ -24,6 +34,7 @@ class DBkey:
 	@data.deleter
 	def data(self):
 		del db[self.key]
+		saveDB()
 
 	@data.setter
 	def data(self,newData):
@@ -31,6 +42,7 @@ class DBkey:
 			del self.data
 		# finished deleting so add the new Data
 		db[self.key] = newData
+		saveDB()
 
 
 	def updateSubKey(self,subKey,newValue):
@@ -44,6 +56,7 @@ class DBkey:
 				prevVal = getattr(getData,subKey,f'{subKey} having no value')
 				getData[subKey] = newValue
 				self.data = getData
+				saveDB()
 				return (True, f'{subKey} updated from {str(prevVal)} to {newValue}')
 			except:
 				return (False,'Error: Unknown Error with the update.')

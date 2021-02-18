@@ -1,2 +1,4 @@
 .vscode/settings.json
-.img/
+img/
+env.py
+myfile.json

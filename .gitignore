@@ -2,3 +2,4 @@
 img/
 env.py
 myfile.json
+__pycache__/

@@ -1,4 +1,9 @@
 import dice
+import random
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+mpl.use('Agg')
+
 
 class Command():
 
@@ -148,7 +153,24 @@ class GroupedCommands():
 			self.commandList = parseCommandsDict(tempDict)
 
 
+	def maxIntensity(self) -> int:
+		return max(cmd.intensity for cmd in self.commandList)
 
+
+	def drawCommand(self,filname:str='drawCommand.png'):
+
+		img = plt.imread("img/SpiralPink.png")
+		fig, ax = plt.subplots()
+		# ax.imshow(img, extent=[-5, 80, -5, 30])
+		ax.imshow(img)
+
+		maxIntensity = self.maxIntensity()
+		for cmd in self.commandList :
+			plt.annotate(cmd.name,(random.randrange(0,80)/100,random.randrange(0,80)/100),xycoords='axes fraction',fontsize=70*cmd.intensity/maxIntensity,color=(1,1,1))
+
+		plt.axis('off')
+		plt.subplots_adjust(left=0.0, right=1, bottom=0.0, top=1)
+		plt.savefig(filname, edgecolor='none',dpi=90)
 
 
 

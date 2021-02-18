@@ -171,11 +171,26 @@ async def smile(ctx, char: charClass.CharInfo):
 	!getCommands Haven
 	Checks the Haven character for any commands and prints them to discord
 	'''
-	file = discord.File('img/smile.png', filename='image.png')
-	charEmbed = char.embed('image')
-	charEmbed.set_image(url='attachment://image.png')
-	charEmbed.title = 'Testing image'
-	await ctx.send(embed=charEmbed,file=file)
+
+	if char.db.inDB:
+		d = char.db.data
+		commandDict = d.get('commands',{})
+		gc = cmds.GroupedCommands(commandDict)
+		imgPath = 'img/spiralWords.png'
+		gc.drawCommand(imgPath)
+
+		file = discord.File(imgPath, filename='image.png')
+		charEmbed = char.embed('')
+		charEmbed.set_image(url='attachment://image.png')
+		charEmbed.title = 'Commands'
+		await ctx.send(embed=charEmbed,file=file)
+	else:
+		await ctx.send('Character not yet added')
+
+
+
+	
+
 
 
 

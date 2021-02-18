@@ -165,8 +165,12 @@ class GroupedCommands():
 		ax.imshow(img)
 
 		maxIntensity = self.maxIntensity()
-		for cmd in self.commandList :
-			plt.annotate(cmd.name,(random.randrange(0,80)/100,random.randrange(0,80)/100),xycoords='axes fraction',fontsize=70*cmd.intensity/maxIntensity,color=(1,1,1))
+		chanceOfBeingShown = 100-(2*len(self.commandList))
+		fontSizeBase = 100-len(self.commandList)
+		for i, cmd in enumerate(self.commandList) :
+			# if there are too many commands then it can get messy really fast.
+			if (random.randrange(0,99)-i) < chanceOfBeingShown:
+				plt.annotate(cmd.name,(random.randrange(0,70)/100,random.randrange(0,90)/100),xycoords='axes fraction',fontsize=fontSizeBase*cmd.intensity/maxIntensity,color=(1,1,1))
 
 		plt.axis('off')
 		plt.subplots_adjust(left=0.0, right=1, bottom=0.0, top=1)
